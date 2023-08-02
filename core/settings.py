@@ -230,3 +230,21 @@ CORS_ALLOW_HEADERS = [
 CORS_PREFLIGHT_MAX_AGE = 86400  # 24 hours (in seconds)
 
 GRAPHQL_AUTH_LOGIN_REQUIRED_ERROR_MESSAGE = "Authentication required to access this resource."
+
+
+
+
+#DJANGO_SETTINGS_MODULE = "libreary.settings"
+#python_files = ["test_*.py", "*_tests.py", "testing/python/*.py", "*/tests.py"]
+
+
+
+
+
+
+
+
+
+
+
+
