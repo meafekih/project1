@@ -33,10 +33,14 @@ class BookInstanceType(DjangoObjectType):
 # Query
 
 from django.conf import settings
+from .decorators import auth_required, email_duplicate, allowed_user
+
 
 class SelectPublisher(graphene.ObjectType):
     selectPublisher = graphene.List(PublisherType)
-
+    
+    @auth_required
+    @allowed_user(allowed_roles=['crud_libreary'])
     def resolve_selectPublisher(root, info):
         print(settings.LIMIT_CHARS)
         return Publisher.objects.all()
@@ -60,11 +64,8 @@ class InsertAuthor(graphene.Mutation):
     author = graphene.Field(AuthorType)
 
     @classmethod
+    @email_duplicate
     def mutate(cls, root, info, name, email, bio):
-        same_email = Author.objects.filter(email=email)
-        if same_email:
-            print('Email exist !')
-            return None
         author = Author(name=name, email=email, bio=bio)
         author.save()
         return InsertAuthor(author=author)
