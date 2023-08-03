@@ -37,18 +37,18 @@ from .decorators import auth_required, email_duplicate, allowed_user
 
 
 class SelectPublisher(graphene.ObjectType):
-    selectPublisher = graphene.List(PublisherType)
+    Publishers = graphene.List(PublisherType)
     
     @auth_required
     @allowed_user(allowed_roles=['crud_libreary'])
-    def resolve_selectPublisher(root, info):
+    def resolve_Publishers(root, info):
         print(settings.LIMIT_CHARS)
         return Publisher.objects.all()
     
 class SelectBookInstance(graphene.ObjectType):
-    selectBookInstance = graphene.Field(BookInstanceType, id=graphene.Int())
+    BookInstances = graphene.Field(BookInstanceType, id=graphene.Int())
 
-    def resolve_selectBookInstance(root, info, id):
+    def resolve_BookInstances(root, info, id):
         print(info.context.user)
         return BookInstance.objects.get(pk=id)
 

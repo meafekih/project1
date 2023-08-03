@@ -32,9 +32,9 @@ Tests: Write tests for your apps to ensure their functionality is correct and ma
 Code Review: 
 Encourage code reviews among your
 
-
+cls, root, info, 
 permissions and groups
-exceptions 
+ 
 
 using postman
 add test pytest
