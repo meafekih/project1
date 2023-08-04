@@ -36,3 +36,13 @@ def allowed_user(allowed_roles=[]):
     return decorator
 
 
+def validation():
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper_func(root, info):
+            user = info.context.user
+            if user:
+                raise TypeError('User not fond')
+            return view_func(root, info)
+        return wrapper_func
+    return decorator

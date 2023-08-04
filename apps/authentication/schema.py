@@ -12,6 +12,7 @@ class GroupType(DjangoObjectType):
     class Meta:
         model = Group
 
+
 class PermissionType(DjangoObjectType):
     class Meta:
         model = Permission

@@ -1,0 +1,15 @@
+{
+	"name": "Base",
+	"version":"0.0.1",
+	"author": "Fekih MA",
+	"website": "www.google.com",
+	"category": "base",
+	"sequence":"1",
+	"depends": [],
+	"external_dependencies":"",
+	"description": "",
+	"summary": "Modules of base",
+	"type":"public",
+	"installed":"0"
+
+}

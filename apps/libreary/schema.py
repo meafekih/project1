@@ -1,6 +1,9 @@
 import graphene
 from graphene_django import DjangoObjectType, DjangoListField
 from .models import Author, Category, Publisher, Book, BookInstance
+from graphene import relay
+
+
 
 # Types
 
@@ -8,7 +11,8 @@ class AuthorType(DjangoObjectType):
     class Meta:
         model = Author
         fields = '__all__'
-
+        interfaces = [relay.Node]# for pagination
+ 
 class CategoryType(DjangoObjectType):
     class Meta:
         model = Category
@@ -34,13 +38,29 @@ class BookInstanceType(DjangoObjectType):
 
 from django.conf import settings
 from .decorators import auth_required, email_duplicate, allowed_user
+from graphene_django.filter import DjangoFilterConnectionField
+
+
+class AuthorConnection(relay.Connection):
+    class Meta:
+        node = AuthorType
+
+class SelectAuthor(graphene.ObjectType):
+    Authors = relay.ConnectionField(AuthorConnection)
+
+    
+    def resolve_Authors(self, info, **kwargs):     
+        queryset = Author.objects.all()
+        return queryset
+    
+
 
 
 class SelectPublisher(graphene.ObjectType):
     Publishers = graphene.List(PublisherType)
     
     @auth_required
-    @allowed_user(allowed_roles=['crud_libreary'])
+    #@allowed_user(allowed_roles=['crud_libreary'])
     def resolve_Publishers(root, info):
         print(settings.LIMIT_CHARS)
         return Publisher.objects.all()
@@ -99,7 +119,7 @@ class DeletePublisher(graphene.Mutation):
 
 
 
-class Query(SelectBookInstance, SelectPublisher):
+class Query(SelectBookInstance, SelectPublisher, SelectAuthor):
     pass
 
 class Mutation(graphene.ObjectType):

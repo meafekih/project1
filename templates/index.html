@@ -10,8 +10,67 @@
 
   <img src="{% static 'imgs/image.png' %}" alt="My Image">
   <ul id="product-list"></ul>
-  <script src="{% static 'js/main.js' %}"  type="text/javascript"></script>
+
+
+  <h1>GraphQL File Upload Example</h1>
+  <input type="file" id="fileInput">
+  <button onclick="uploadFile()">Upload File</button>
+
+
+
+
+  <!--script src="{% static 'js/main.js' %}"  type="text/javascript"></script-->
+  <script>
+
+function uploadFile() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+      alert('Please select a file.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('operations', JSON.stringify({
+      query: "mutation ($file: Upload!) {UploadProductFile(file: $file){success}}",      
+      variables: {file: null,},      
+    }));
+
+    formData.append('map', JSON.stringify({0: ['variables.file'],}));
+    formData.append('0', file);
+
+    fetch('/api/', {
+      method: 'POST',
+      headers: {'Accept':'application/json',},
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data
+        console.log(data);
+        alert('File uploaded successfully');
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error('Error:', error);
+        alert('Error uploading file');
+      });
+  }
+
+
+  </script>
 </body>
 </html>
 
+{ "query": "mutation($file: Upload) 
+{ UploadProductFile(file: $file 
+  input: { sample: { filename: \"test\"} }) { sample { md5} }}"
+  , "variables": { "file": null }}
 
+
+
+  { 
+    "query": "mutation($files: Upload){UploadProductFile(files: $files){success}}",
+    "variables": {"files": null} 
+  }

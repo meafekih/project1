@@ -5,6 +5,7 @@ window.onload = () => {
     fetchProducts();
   };
   
+  
   async function fetchProducts() {
     const response = await fetch('/api/', {
       method: 'POST',
@@ -41,3 +42,17 @@ window.onload = () => {
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
   
+
+
+
+  //
+
+
+
+
+
+
+
+
+
+
