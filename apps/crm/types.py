@@ -8,7 +8,6 @@ class CustomerType(DjangoObjectType):
     class Meta:
         model = Customer
         fields = '__all__'
-        #interfaces = [relay.Node]# for pagination
 
 class ContactType(DjangoObjectType):
     class Meta:
@@ -29,6 +28,7 @@ class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = '__all__'
+        interfaces = [relay.Node]# for pagination
 
 class SaleType(DjangoObjectType):
     class Meta:
@@ -49,3 +49,8 @@ class CampaignType(DjangoObjectType):
     class Meta:
         model = Campaign
         fields = '__all__'
+
+
+class ProductConnection(relay.Connection):
+    class Meta:
+        node = ProductType

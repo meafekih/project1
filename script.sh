@@ -15,10 +15,12 @@ code .
 set app folder in trash
 delete related app "query and mutation" from core/schema.py
 
-complete authentication module
-upload file image
-models.py attributes ..
+complete libreary fonctionnaliy ( )
 configure admin page
+models.py attributes ..
+search case using wrapper
+complete authentication module
 add test 
+upload file image
 
 
