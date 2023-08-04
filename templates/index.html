@@ -63,14 +63,3 @@ function uploadFile() {
 </body>
 </html>
 
-{ "query": "mutation($file: Upload) 
-{ UploadProductFile(file: $file 
-  input: { sample: { filename: \"test\"} }) { sample { md5} }}"
-  , "variables": { "file": null }}
-
-
-
-  { 
-    "query": "mutation($files: Upload){UploadProductFile(files: $files){success}}",
-    "variables": {"files": null} 
-  }

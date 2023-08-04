@@ -45,11 +45,12 @@ INSTALLED_APPS = [
     'django_filters',
     "corsheaders",
 
-    #'base',
-    'apps.products',
+    'apps.crm',
+    'apps.base',
+    #'apps.products',
     'apps.authentication',
     'apps.libreary',
-    'apps.quiz',
+    #'apps.quiz',
 ]
 AUTH_USER_MODEL = 'authentication.ExtendUser'
 
