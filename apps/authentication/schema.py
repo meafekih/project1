@@ -7,39 +7,34 @@ import graphene
 from graphene_django.types import DjangoObjectType
 from django.contrib.auth.models import Group, Permission
 from apps.authentication.models import ExtendUser as User
+from .decorators import filter_resolver
 
 class GroupType(DjangoObjectType):
     class Meta:
         model = Group
-
 
 class PermissionType(DjangoObjectType):
     class Meta:
         model = Permission
 
 
-class selectGroups(graphene.ObjectType):
-    Groups = graphene.List(GroupType, 
-    **{field_name: graphene.Argument(graphene.String) for field_name in GroupType._meta.fields})
-    def resolve_Groups(self, info, **kwargs):
-        queryset = Group.objects.all()
-        for n, v in kwargs.items():
-            if n in GroupType._meta.fields:
-                filter_args = {n: v}
-                queryset = queryset.filter(**filter_args)
-        return queryset
+class Groups(graphene.ObjectType):
+    # make all fields of groups as arguments but all fields considere String
+    groups = graphene.List(GroupType, #id=graphene.ID(), name=graphene.String())
+    **{field: graphene.Argument(graphene.String) for field in GroupType._meta.fields})
+
+    @filter_resolver(GroupType)
+    def resolve_groups(self, info, **kwargs):
+        return Group.objects.all()
+
+class Permissions(graphene.ObjectType):
+    permissions = graphene.List(PermissionType, 
+    **{field: graphene.Argument(graphene.String) for field in PermissionType._meta.fields})
     
-class selectPermissions(graphene.ObjectType):
-    Permissions = graphene.List(PermissionType, 
-                                id=graphene.ID(),
-                                name=graphene.String())
-    def resolve_Permissions(self, info, id=None, name=None):
-        queryset = Permission.objects.all()
-        if id:
-            queryset = queryset.filter(id=id)
-        if name:
-            queryset = queryset.filter(name=name)
-        return queryset
+    @filter_resolver(PermissionType)
+    def resolve_permissions(self, info, **kwargs):
+        return Permission.objects.all()
+
 
 
 class InsertGroup(graphene.Mutation):
@@ -92,9 +87,12 @@ class AssignPermissionToGroup(graphene.Mutation):
 
 
 
-class AuthMutation(graphene.ObjectType):
+class AuthMutations(graphene.ObjectType):
     register = mutations.Register.Field()
     verify_account = mutations.VerifyAccount.Field()
+    token_auth = mutations.ObtainJSONWebToken.Field()
+    update_account = mutations.UpdateAccount.Field()
+
     assign_group_to_user = AssignGroupToUser.Field()
     InsertGroup = InsertGroup.Field()
     assign_permission_to_group = AssignPermissionToGroup.Field()
@@ -102,12 +100,10 @@ class AuthMutation(graphene.ObjectType):
  
  
 
-class Query(UserQuery, MeQuery, selectGroups, selectPermissions):
+class Query(UserQuery, MeQuery, Groups, Permissions):
     pass
 
-
-
-class Mutation(AuthMutation):
+class Mutation(AuthMutations):
     pass
 
 

@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     #'adminlte3',
     #'adminlte3_theme',
 
-    'django_extensions',# for generate ERD models
+    'django_extensions',
+    # for generate ERD models
     #python manage.py graph_models -a -o myapp_models.png
 
 
@@ -154,6 +155,8 @@ GRAPHQL_JWT = {
         "graphql_auth.mutations.Register",
         "graphql_auth.mutations.VerifyAccount",
         "graphql_auth.mutations.ObtainJSONWebToken",
+        "graphql_auth.mutations.ObtainJSONWebToken",
+
     ],
 
     'JWT_VERIFY_EXPIRATION': True,
@@ -240,9 +243,6 @@ GRAPHQL_AUTH_LOGIN_REQUIRED_ERROR_MESSAGE = "Authentication required to access t
 
 #DJANGO_SETTINGS_MODULE = "libreary.settings"
 #python_files = ["test_*.py", "*_tests.py", "testing/python/*.py", "*/tests.py"]
-
-
-
 
 
 
