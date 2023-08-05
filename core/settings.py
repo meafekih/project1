@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_filters',
     "corsheaders",
 
+    'apps.base',
     'apps.authentication',
     'apps.crm',
 ]
