@@ -102,3 +102,39 @@ class Campaign(models.Model):
 
     def __str__(self):
         return self.name
+
+
+
+class all(models.Model):
+
+    AutoField = models.AutoField(primary_key=True)
+    TextField = models.TextField()
+    IntegerField = models.IntegerField()
+    BooleanField = models.BooleanField()
+    CharField = models.CharField(max_length=255)
+    DateTimeField = models.DateTimeField()
+    DateField = models.DateField()
+    TimeField = models.TimeField()
+    BinaryField = models.BinaryField()
+    EmailField = models.EmailField()
+    ImageField = models.ImageField()
+    FileField = models.FileField()
+    SlugField = models.SlugField()
+
+    """ 
+    #BigAutoField = models.BigAutoField()
+    BigIntegerField = models.BigIntegerField()
+    DecimalField = models.DecimalField(decimal_places=2, max_digits=4)
+    DurationField = models.DurationField()
+    FilePathField = models.FilePathField()
+    FloatField = models.FloatField()
+    GenericIPAddressField = models.GenericIPAddressField()
+    JSONField = models.JSONField()
+    PositiveBigIntegerField = models.PositiveBigIntegerField()
+    PositiveIntegerField = models.PositiveIntegerField()
+    PositiveSmallIntegerField = models.PositiveSmallIntegerField()
+    #SmallAutoField = models.SmallAutoField()
+    SmallIntegerField = models.SmallIntegerField()
+    URLField = models.URLField()
+    UUIDField = models.UUIDField() 
+    """

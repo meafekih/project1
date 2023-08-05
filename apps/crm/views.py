@@ -10,6 +10,4 @@ def graphql_view(request):
     return GraphQLView.as_view(graphiql=True)(request)
 
 def index(request):
-    # This view renders the index.html file
     return render(request, 'index.html')
-

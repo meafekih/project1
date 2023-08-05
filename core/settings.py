@@ -32,6 +32,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    #'adminlte3',
+    #'adminlte3_theme',
+
+    'django_extensions',# for generate ERD models
+    #python manage.py graph_models -a -o myapp_models.png
+
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -231,13 +238,8 @@ CORS_PREFLIGHT_MAX_AGE = 86400  # 24 hours (in seconds)
 GRAPHQL_AUTH_LOGIN_REQUIRED_ERROR_MESSAGE = "Authentication required to access this resource."
 
 
-
-
 #DJANGO_SETTINGS_MODULE = "libreary.settings"
 #python_files = ["test_*.py", "*_tests.py", "testing/python/*.py", "*/tests.py"]
-
-
-
 
 
 

@@ -1,3 +1,8 @@
+# Folders
+
+trash/
+z_tuto/
+
 # Django #
 *.log
 *.pot
@@ -50,7 +55,7 @@ atlassian-ide-plugin.xml
 *$py.class 
 
 # Distribution / packaging
-trash/
+
 .Python build/ 
 develop-eggs/ 
 dist/ 
