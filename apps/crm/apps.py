@@ -8,4 +8,3 @@ class CrmConfig(AppConfig):
     settings.NUMBERS_BOOKS = 5
     settings.LIMIT_CHARS = 200
 
- 
