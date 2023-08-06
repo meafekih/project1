@@ -1,13 +1,14 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from .decorators import auth_required, email_duplicate
+from apps.base.decorators import auth_required, email_duplicate
 from .models import (Customer, Contact, Opportunity, Task,
-    Product, Sale, Meeting, Lead, Campaign)
+    Product, Sale, Meeting, Lead)
 from .types import (CustomerType, ContactType, OpportunityType, TaskType,
-    ProductType, SaleType, MeetingType, LeadType, CampaignType,
-    ProductConnection)
+    ProductType, SaleType, MeetingType, LeadType,
+    ProductConnection, ContactsConnection)
 from django.conf import settings
 from graphene import relay
+from apps.base.decorators import filter_resolver
 
 # add upload_file 
 from graphene_file_upload.scalars import Upload
@@ -15,18 +16,14 @@ from graphene_file_upload.scalars import Upload
 # Customer
 
 class Customers(graphene.ObjectType):
-
-    customers = graphene.List(CustomerType,id=graphene.ID(),name=graphene.String())
+    customers = graphene.List(CustomerType,#id=graphene.ID(),name=graphene.String())
+    **{field: graphene.Argument(graphene.String) for field in CustomerType._meta.fields})
 
     @auth_required
-    def resolve_Permissions(self, info, id=None, name=None):
+    @filter_resolver(CustomerType)
+    def resolve_customers(self, info, **kwargs):
         print(info.context.user)
-        queryset = Customer.objects.all()
-        if id:
-            queryset = queryset.filter(id=id)
-        if name:
-            queryset = queryset.filter(name=name)
-        return queryset
+        return Customer.objects.all()
 
 class InsertCustomer(graphene.Mutation):
     class Arguments:
@@ -43,6 +40,21 @@ class InsertCustomer(graphene.Mutation):
         return InsertCustomer(customer=customer)
 
 
+# Contact
+
+class Contacts(graphene.ObjectType):
+    contacts = relay.ConnectionField(ContactsConnection, #)
+    **{field: graphene.Argument(graphene.String) for field in ContactType._meta.fields})
+
+    @auth_required
+    @filter_resolver(ContactType)
+    def resolve_contacts(self, info, **kwargs):     
+        contacts = Contact.objects.all()
+        return contacts
+
+
+
+
 # Product
 
 class Products(graphene.ObjectType):
@@ -54,14 +66,8 @@ class Products(graphene.ObjectType):
 
 
 
-
-
-
-
-
-
-
-class Query(Customers, Products, ):
+from .schemas.campaign import Campaigns
+class Query(Customers, Products, Contacts, Campaigns ):
     pass
 
 class Mutation(graphene.ObjectType):

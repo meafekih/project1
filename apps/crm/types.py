@@ -1,8 +1,10 @@
 import graphene
 from graphene_django import DjangoObjectType, DjangoListField
 from .models import (Customer, Contact, Opportunity, Task,
-                    Product, Sale, Meeting, Lead, Campaign)
+                    Product, Sale, Meeting, Lead)
 from graphene import relay
+
+# Types
 
 class CustomerType(DjangoObjectType):
     class Meta:
@@ -45,12 +47,19 @@ class LeadType(DjangoObjectType):
         model = Lead
         fields = '__all__'
 
+""" 
 class CampaignType(DjangoObjectType):
     class Meta:
         model = Campaign
         fields = '__all__'
-
+ """
+# connection (pagination)
 
 class ProductConnection(relay.Connection):
     class Meta:
         node = ProductType
+
+
+class ContactsConnection(relay.Connection):
+    class Meta:
+        node = ContactType      

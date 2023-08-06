@@ -7,8 +7,6 @@ class Customer(base):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    
-
     def __str__(self):
         return self.name
 
@@ -17,8 +15,6 @@ class Contact(base):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='contacts')
-    
-
     def __str__(self):
         return self.name
 
@@ -26,9 +22,7 @@ class Opportunity(base):
     name = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     stage = models.CharField(max_length=50)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='opportunities')
-    
-
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='opportunities')  
     def __str__(self):
         return self.name
 
@@ -38,8 +32,6 @@ class Task(base):
     due_date = models.DateField()
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='tasks')
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_tasks')
-    
-
     def __str__(self):
         return self.title
 
@@ -47,8 +39,6 @@ class Product(base):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    
-
     def __str__(self):
         return self.name
 
@@ -57,8 +47,6 @@ class Sale(base):
     products = models.ManyToManyField(Product, related_name='sales')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     sale_date = models.DateField()
-    
-
     def __str__(self):
         return f"Sale for {self.customer} on {self.sale_date}"
 
@@ -69,8 +57,6 @@ class Meeting(base):
     location = models.CharField(max_length=100)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='meetings')
     participants = models.ManyToManyField(User, related_name='meetings_attended')
-    
-
     def __str__(self):
         return self.title
 
@@ -79,22 +65,19 @@ class Lead(base):
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     description = models.TextField()
-    
-
     def __str__(self):
         return self.name
 
+""" 
 class Campaign(base):
     name = models.CharField(max_length=100)
     description = models.TextField()
     start_date = models.DateField()
     end_date = models.DateField()
     leads = models.ManyToManyField(Lead, related_name='campaigns')
-    
-
     def __str__(self):
         return self.name
-
+"""
 
 
 class all(base):

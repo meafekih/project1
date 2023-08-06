@@ -7,7 +7,7 @@ import graphene
 from graphene_django.types import DjangoObjectType
 from django.contrib.auth.models import Group, Permission
 from apps.authentication.models import ExtendUser as User
-from .decorators import filter_resolver
+from apps.base.decorators import filter_resolver
 
 class GroupType(DjangoObjectType):
     class Meta:
