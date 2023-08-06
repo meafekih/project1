@@ -6,7 +6,7 @@ from django.conf import settings
 from graphene import relay
 from django.db import models
 from apps.base.models import base
-from ..models import Lead
+from .lead import Lead
 
 
 class Campaign(base):

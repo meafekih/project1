@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from apps.crm.views import index
+from apps.base.views import index
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from .schema import schema
