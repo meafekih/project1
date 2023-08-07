@@ -17,3 +17,16 @@ class AUTHENTICATION_REQUIRED(GraphQLAuthError):
 
 class UNAUTHORIZED(GraphQLAuthError):
     default_message = _("You are not Authorized!")
+
+class NAME_REQUIRED(GraphQLAuthError):
+    default_message = _("Name required")
+
+class EMAIL_REQUIRED(GraphQLAuthError):
+    default_message = _("Email required")
+
+
+class FIELD_REQUIRED(GraphQLAuthError):
+    default_message = _("FIELD required")
+    def __init__(self, field_name):
+        if field_name:
+            default_message = _(field_name.upper() + " required")

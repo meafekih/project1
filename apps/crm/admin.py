@@ -1,7 +1,13 @@
 from django.contrib import admin
-
+ 
 from .schemas.customer import Customer
-admin.site.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display=['id', 'name','email','address']
+admin.site.register(Customer, CustomerAdmin)
+
+
+#from .schemas.customer import Customer
+#admin.site.register(Customer)
 
 from .schemas.contact import Contact
 admin.site.register(Contact)

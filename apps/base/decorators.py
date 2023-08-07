@@ -1,4 +1,5 @@
-from .exceptions import EMAIL_DUPLICATE , AUTHENTICATION_REQUIRED
+from .exceptions import (EMAIL_DUPLICATE , AUTHENTICATION_REQUIRED,
+EMAIL_REQUIRED, NAME_REQUIRED, FIELD_REQUIRED)
 from functools import wraps
 
 
@@ -48,5 +49,15 @@ def email_duplicate(model):
         return wrapper
     return decorator
 
-
+def required_fields(*fields_kwargs):
+    def decorator(resolver_func):
+        @wraps(resolver_func)
+        def wrapper(self, info, **kwargs):
+            for field in fields_kwargs:
+                value = kwargs.get(field)
+                if value is None:
+                    raise FIELD_REQUIRED(field.upper() + " "+"required") 
+            return resolver_func(self, info, **kwargs)           
+        return wrapper
+    return decorator
 

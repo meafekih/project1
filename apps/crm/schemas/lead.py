@@ -34,6 +34,7 @@ class Leads(graphene.ObjectType):
     leads = graphene.List(LeadType,#id=graphene.ID(),name=graphene.String())
     **{field: graphene.Argument(graphene.String) for field in LeadType._meta.fields})
 
+
     @auth_required
     @filter_resolver(LeadType)
     def resolve_leads(self, info, **kwargs):

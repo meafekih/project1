@@ -34,9 +34,8 @@ class Contacts(graphene.ObjectType):
 
     contacts = relay.ConnectionField(ContactConnection, #)
     **{field: graphene.Argument(graphene.String) for field in ContactType._meta.fields})
+    
 
-    #contacts = graphene.List(ContactType,#id=graphene.ID(),name=graphene.String())
-    #**{field: graphene.Argument(graphene.String) for field in ContactType._meta.fields})
 
     @auth_required
     @filter_resolver(ContactType)
