@@ -1,5 +1,5 @@
 from .exceptions import (EMAIL_DUPLICATE , AUTHENTICATION_REQUIRED,
-EMAIL_REQUIRED, NAME_REQUIRED, FIELD_REQUIRED)
+ FIELD_REQUIRED, MANY_VALUES_RETURNED, VALUE_NOT_EXIST)
 from functools import wraps
 
 
@@ -61,3 +61,36 @@ def required_fields(*fields_kwargs):
         return wrapper
     return decorator
 
+
+def unique_instance(model):
+    def decorator(resolver_func):
+        @wraps(resolver_func)
+        def wrapper(self, info, **kwargs):
+            count = len(model.objects.filter(**kwargs))
+            if count >1:
+                raise MANY_VALUES_RETURNED       
+            if count ==0:
+                 raise VALUE_NOT_EXIST
+            return resolver_func(self, info, **kwargs)           
+        return wrapper
+    return decorator
+
+def download(path, filename):
+    def decorator(resolver_func):
+        @wraps(resolver_func)
+        def wrapper(self, info, **kwargs): 
+
+            file_path = f'{path}/{filename}'
+
+            
+            try:
+                with open(file_path, 'rb') as file:
+                    file_data = file.read()
+                    return file_data.encode('base64').decode()  
+            except FileNotFoundError:
+                return None   
+
+
+            return resolver_func(self, info, **kwargs)           
+        return wrapper
+    return decorator

@@ -246,7 +246,7 @@ GRAPHQL_AUTH_LOGIN_REQUIRED_ERROR_MESSAGE = "Authentication required to access t
 #python_files = ["test_*.py", "*_tests.py", "testing/python/*.py", "*/tests.py"]
 
 
-
-
+MEDIA_URL = '/media/'  # URL prefix for media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Absolute filesystem path to the directory that will hold user-uploaded files.
 
 

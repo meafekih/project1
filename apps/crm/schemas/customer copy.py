@@ -15,8 +15,7 @@ class Customer(base):
     email = models.EmailField(null=False, blank=False)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    file = models.ImageField(upload_to='images/')
-    file_name = models.CharField(max_length=100,)
+    file = models.ImageField(upload_to='images/') 
     
     def __str__(self):
         return self.name
@@ -76,15 +75,15 @@ from django.core.files.base import ContentFile
 
 class UploadImage(graphene.Mutation):
     class Arguments:
-        file_name = graphene.String()
+        name = graphene.String()
         file = graphene.String()  # Base64-encoded image data
 
     image = graphene.Field(CustomerType)
 
-    def mutate(self, info, file_name, file):
+    def mutate(self, info, name, file):
         image_data = base64.b64decode(file)
-        image_file = Customer(file_name=file_name)
-        image_file.file.save(file_name + '.png', ContentFile(image_data))
+        image_file = Customer(name=name)
+        image_file.file.save(name + '.png', ContentFile(image_data))
         image_file.save()
         return UploadImage(image=image_file)
 
@@ -146,28 +145,25 @@ class UpdateCustomer(graphene.Mutation):
         email= graphene.String()
         phone = graphene.String()
         address= graphene.String()
-        file_name = graphene.String()
-        file = graphene.String()  # Base64-encoded image data
 
     Output = CustomerType
 
     def mutate(self, info, parameter, value, **kwargs):
-        lookup_kwargs = {parameter: value}
+        update_handler = ModelUpdateHandler(parameter, value)
+        Output = update_handler.update_model(**kwargs)
+        return Output
+
+class ModelUpdateHandler: # set this class genric for all classes
+    def __init__(self, parameter, value):
+        self.parameter = parameter
+        self.value = value
+   
+    def update_model(self, **kwargs):
+        lookup_kwargs = {self.parameter: self.value}
         matching_models = Customer.objects.filter(**lookup_kwargs)
-        file_name= "_"; image_data=None
         for model in matching_models:
             for field_name, field_value in kwargs.items():
-                if (field_name!='file') & (field_name!='file_name'):
-                    setattr(model, field_name, field_value)
-
-                if (field_name=='file'):
-                    file = kwargs.get('file')
-                    image_data = base64.b64decode(file)
-                if field_name=='file_name':
-                    file_name= kwargs.get('file_name')
-
-            if image_data:
-                model.file.save(file_name + '.png', ContentFile(image_data))
+                setattr(model, field_name, field_value)
             model.save()
         return matching_models
 

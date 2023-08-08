@@ -18,11 +18,12 @@ class AUTHENTICATION_REQUIRED(GraphQLAuthError):
 class UNAUTHORIZED(GraphQLAuthError):
     default_message = _("You are not Authorized!")
 
-class NAME_REQUIRED(GraphQLAuthError):
-    default_message = _("Name required")
+class MANY_VALUES_RETURNED(GraphQLAuthError):
+    default_message = _("Many values returned")
 
-class EMAIL_REQUIRED(GraphQLAuthError):
-    default_message = _("Email required")
+class VALUE_NOT_EXIST(GraphQLAuthError):
+    default_message = _("Value not exist")
+
 
 
 class FIELD_REQUIRED(GraphQLAuthError):
