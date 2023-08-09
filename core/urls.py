@@ -1,21 +1,26 @@
 from django.contrib import admin
 from django.urls import path, include
-from apps.base.views import index
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from .schema import schema
+from apps.crm.views import CustomerCreateView, CustomerListView, download
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
     path('api/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema)), name='api'),
-    
+     
+    path('', CustomerListView.as_view(), name='home'),
+    path('upload/', CustomerCreateView.as_view(), name='upload'),
+    path('download/<int:customer_id>/', download, name='download'),
+
     # if using rest api or views 
     #path('authentication/', include('apps.authentication.urls')),
     #path('libreary/', include('apps.libreary.urls')),
     #path('quiz/', include('apps.quiz.urls')),
     #path('products/', include('apps.products.urls')),
 ]
+
 
 
 from django.conf import settings

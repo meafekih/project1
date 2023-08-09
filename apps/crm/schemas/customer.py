@@ -7,7 +7,8 @@ from graphene import relay
 from django.db import models
 from apps.base.models import base
 import base64
-
+from django.core.files.base import ContentFile
+from django import forms
 
 
 class Customer(base):
@@ -15,8 +16,9 @@ class Customer(base):
     email = models.EmailField(null=False, blank=False)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    file = models.ImageField(upload_to='images/')
-    file_name = models.CharField(max_length=100,)
+
+    document = models.FileField(upload_to='media/documents/')
+    description = models.CharField(max_length=255, blank=True)
     
     def __str__(self):
         return self.name
@@ -25,6 +27,13 @@ class Customer(base):
         # Perform custom logic before saving
         self.address = self.address.upper()
         return super().save()
+
+
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ('description', 'document')
 
 class CustomerType(DjangoObjectType):
     class Meta:
@@ -45,13 +54,26 @@ class CustomerConnection(relay.Connection):
         return Customer.objects.count()
 
 
-
 class Customers(graphene.ObjectType):
     customers = relay.ConnectionField(CustomerConnection, #)
     **{field: graphene.Argument(graphene.String) for field in CustomerType._meta.fields})
     total_count = graphene.Int()
 
-    download_image = graphene.Field(CustomerType, filename=graphene.String(required=True))
+    download_image = graphene.Field(CustomerType,)
+    #filename=graphene.String(required=True))
+
+    @filter_resolver(CustomerType)
+    def resolve_download_image(self, info, name, **kwargs):
+        try:
+            #image_file = Customer.objects.get(file_name=filename)      
+            # image_file.file.url 
+            customer = Customer.objects.filter(**kwargs)
+            count = len(customer)
+            print('count ' + count)
+            return 'file.png'
+        except Customer.DoesNotExist:
+            return None
+
 
     @auth_required
     @filter_resolver(CustomerType)
@@ -62,51 +84,6 @@ class Customers(graphene.ObjectType):
     def resolve_total_count(self, info):
         return CustomerConnection().total_count(info)
     
-        #@download('path', 'filename')
-    def resolve_download_image(self, info, filename):
-        try:
-            image_file = Customer.objects.get(name=filename)
-            return image_file
-        except Customer.DoesNotExist:
-            return None
-
-
-
-from django.core.files.base import ContentFile
-
-class UploadImage(graphene.Mutation):
-    class Arguments:
-        file_name = graphene.String()
-        file = graphene.String()  # Base64-encoded image data
-
-    image = graphene.Field(CustomerType)
-
-    def mutate(self, info, file_name, file):
-        image_data = base64.b64decode(file)
-        image_file = Customer(file_name=file_name)
-        image_file.file.save(file_name + '.png', ContentFile(image_data))
-        image_file.save()
-        return UploadImage(image=image_file)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class InsertCustomer(graphene.Mutation):
     class Arguments:
@@ -137,7 +114,40 @@ class DeleteCustomer(graphene.Mutation):
         instance = Customer.objects.filter(**kwargs)
         instance.delete()
         return DeleteCustomer(success=True)
- 
+
+
+class UpdateCustomer(graphene.Mutation):
+    class Arguments:
+        parameter = graphene.String(required=True)
+        value = graphene.String(required=True)
+        name = graphene.String()
+        email= graphene.String()
+        phone = graphene.String()
+        address= graphene.String()
+        #file_name = graphene.String()
+        #file = graphene.String()  # Base64-encoded image data
+
+    customer = graphene.Field(CustomerType)
+
+    def mutate(self, info, parameter, value, **kwargs):
+        lookup_kwargs = {parameter: value}
+        customer_query = Customer.objects.filter(**lookup_kwargs)
+        file_name= "_"; image_data=None
+        for customer in customer_query:
+        # this for all instances filter 
+        # if you want get just first inscance delete prevuious for
+            for field_name, field_value in kwargs.items():                
+                    setattr(customer, field_name, field_value)                
+            customer.save()
+        return UpdateCustomer(customer=customer)
+
+
+
+
+
+"""
+This methode uploading with updating file image to server unconseilled
+
 class UpdateCustomer(graphene.Mutation):
     class Arguments:
         parameter = graphene.String(required=True)
@@ -149,27 +159,29 @@ class UpdateCustomer(graphene.Mutation):
         file_name = graphene.String()
         file = graphene.String()  # Base64-encoded image data
 
-    Output = CustomerType
+    customer = graphene.Field(CustomerType)
 
     def mutate(self, info, parameter, value, **kwargs):
         lookup_kwargs = {parameter: value}
-        matching_models = Customer.objects.filter(**lookup_kwargs)
+        customer_query = Customer.objects.filter(**lookup_kwargs)
         file_name= "_"; image_data=None
-        for model in matching_models:
+        for customer in customer_query:
+        # this for all instances filter 
+        # if you want get just first inscance delete prevuious for
             for field_name, field_value in kwargs.items():
                 if (field_name!='file') & (field_name!='file_name'):
-                    setattr(model, field_name, field_value)
-
+                    setattr(customer, field_name, field_value)
                 if (field_name=='file'):
                     file = kwargs.get('file')
                     image_data = base64.b64decode(file)
                 if field_name=='file_name':
                     file_name= kwargs.get('file_name')
-
             if image_data:
-                model.file.save(file_name + '.png', ContentFile(image_data))
-            model.save()
-        return matching_models
+                customer.file.save(file_name + '.png', ContentFile(image_data))
+            customer.save()
+        return UpdateCustomer(customer=customer)
+
+"""
 
 
 

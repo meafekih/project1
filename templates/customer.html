@@ -1,0 +1,16 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <h2>Customers</h2>
+  <ul>
+    {% for customer in customers %}
+      <li>
+        {{ customer.description }} - 
+        <a href="{% url 'download' customer.id %}">Download</a>
+      </li>
+    {% empty %}
+      <li>No customer found.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

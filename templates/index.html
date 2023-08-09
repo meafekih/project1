@@ -1,65 +1,31 @@
+
+
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-  <title>مشروع Django و GraphQL</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+
   <h1>قائمة المنتجات</h1>
 
-  <img src="{% static 'imgs/image.png' %}" alt="My Image">
+  <!--img src="{% static 'imgs/image.png' %}" alt="My Image"-->
   <ul id="product-list"></ul>
 
 
-  <h1>GraphQL File Upload Example</h1>
-  <input type="file" id="fileInput">
-  <button onclick="uploadFile()">Upload File</button>
+
+  
+
+  {% block content %}
+    <h2>Documents</h2>
+    <ul>
+      {% for document in documents %}
+        <li>
+          {{ document.description }} - 
+          <a href="{% url 'download' document.id %}">Download</a>
+        </li>
+      {% empty %}
+        <li>No documents found.</li>
+      {% endfor %}
+    </ul>
+  {% endblock %}
 
 
 
-
-  <!--script src="{% static 'js/main.js' %}"  type="text/javascript"></script-->
-  <script>
-
-function uploadFile() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-
-    if (!file) {
-      alert('Please select a file.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('operations', JSON.stringify({
-      query: "mutation ($file: Upload!) {UploadProductFile(file: $file){success}}",      
-      variables: {file: null,},      
-    }));
-
-    formData.append('map', JSON.stringify({0: ['variables.file'],}));
-    formData.append('0', file);
-
-    fetch('/api/', {
-      method: 'POST',
-      headers: {'Accept':'application/json',},
-      body: formData,
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Handle the response data
-        console.log(data);
-        alert('File uploaded successfully');
-      })
-      .catch(error => {
-        // Handle any errors
-        console.error('Error:', error);
-        alert('Error uploading file');
-      });
-  }
-
-
-  </script>
-</body>
-</html>
 

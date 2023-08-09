@@ -9,5 +9,5 @@ def graphql_view(request):
     # This view handles GraphQL requests
     return GraphQLView.as_view(graphiql=True)(request)
 
-def index(request):
-    return render(request, 'index.html')
+#def index(request):
+#    return render(request, 'index.html')

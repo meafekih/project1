@@ -249,4 +249,10 @@ GRAPHQL_AUTH_LOGIN_REQUIRED_ERROR_MESSAGE = "Authentication required to access t
 MEDIA_URL = '/media/'  # URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Absolute filesystem path to the directory that will hold user-uploaded files.
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',  # Make sure this is included
 
+    ],
+}
