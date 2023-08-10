@@ -6,8 +6,6 @@ from django.conf import settings
 from graphene import relay
 from django.db import models
 from apps.base.models import base
-import base64
-from django.core.files.base import ContentFile
 from django import forms
 
 
@@ -17,7 +15,7 @@ class Customer(base):
     phone = models.CharField(max_length=20)
     address = models.TextField()
 
-    document = models.FileField(upload_to='media/documents/')
+    document = models.FileField(upload_to='crm/')
     description = models.CharField(max_length=255, blank=True)
     
     def __str__(self):
@@ -29,11 +27,10 @@ class Customer(base):
         return super().save()
 
 
-
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
-        fields = ('description', 'document')
+        fields = '__all__'
 
 class CustomerType(DjangoObjectType):
     class Meta:
@@ -75,7 +72,7 @@ class Customers(graphene.ObjectType):
             return None
 
 
-    @auth_required
+    #@auth_required
     @filter_resolver(CustomerType)
     def resolve_customers(self, info, **kwargs):
         print(settings.LIMIT_CHARS)
@@ -83,7 +80,6 @@ class Customers(graphene.ObjectType):
     
     def resolve_total_count(self, info):
         return CustomerConnection().total_count(info)
-    
 
 class InsertCustomer(graphene.Mutation):
     class Arguments:
@@ -115,7 +111,6 @@ class DeleteCustomer(graphene.Mutation):
         instance.delete()
         return DeleteCustomer(success=True)
 
-
 class UpdateCustomer(graphene.Mutation):
     class Arguments:
         parameter = graphene.String(required=True)
@@ -132,6 +127,7 @@ class UpdateCustomer(graphene.Mutation):
     def mutate(self, info, parameter, value, **kwargs):
         lookup_kwargs = {parameter: value}
         customer_query = Customer.objects.filter(**lookup_kwargs)
+        print(customer_query)
         file_name= "_"; image_data=None
         for customer in customer_query:
         # this for all instances filter 
@@ -148,6 +144,8 @@ class UpdateCustomer(graphene.Mutation):
 """
 This methode uploading with updating file image to server unconseilled
 
+import base64
+from django.core.files.base import ContentFile
 class UpdateCustomer(graphene.Mutation):
     class Arguments:
         parameter = graphene.String(required=True)

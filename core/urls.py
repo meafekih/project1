@@ -3,7 +3,7 @@ from django.urls import path, include
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from .schema import schema
-from apps.crm.views import CustomerCreateView, CustomerListView, download
+from apps.crm.views.customer import CustomerCreateView, CustomerListView, download
 
 
 urlpatterns = [
@@ -13,6 +13,8 @@ urlpatterns = [
     path('', CustomerListView.as_view(), name='home'),
     path('upload/', CustomerCreateView.as_view(), name='upload'),
     path('download/<int:customer_id>/', download, name='download'),
+
+    path('silk/', include('silk.urls', namespace='silk')),
 
     # if using rest api or views 
     #path('authentication/', include('apps.authentication.urls')),

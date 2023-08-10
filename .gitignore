@@ -3,6 +3,7 @@
 trash/
 z_tuto/
 
+
 # Django #
 *.log
 *.pot

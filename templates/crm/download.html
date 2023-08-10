@@ -1,0 +1,31 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+  <h1>قائمة المنتجات</h1>
+
+  <!--img src="{% static 'imgs/image.png' %}" alt="My Image"-->
+  <ul id="product-list"></ul>
+
+
+
+  
+
+  {% block content %}
+    <h2>customer</h2>
+    <ul>
+      {% for customer in customers %}
+        <li>
+          {{ customer.description }} - 
+          <a href="{% url 'download' customer.id %}">Download</a>
+        </li>
+      {% empty %}
+        <li>No customers found.</li>
+      {% endfor %}
+    </ul>
+  {% endblock %}
+
+
+
+
