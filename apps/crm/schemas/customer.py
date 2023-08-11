@@ -7,6 +7,7 @@ from graphene import relay
 from django.db import models
 from apps.base.models import base
 from django import forms
+from apps.authentication.models import ExtendUser as User
 
 
 class Customer(base):
@@ -14,6 +15,7 @@ class Customer(base):
     email = models.EmailField(null=False, blank=False)
     phone = models.CharField(max_length=20)
     address = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='user', null=True)
 
     document = models.FileField(upload_to='crm/')
     description = models.CharField(max_length=255, blank=True)
@@ -89,10 +91,14 @@ class InsertCustomer(graphene.Mutation):
         address= graphene.String()
     customer = graphene.Field(CustomerType)
     
-    @email_duplicate(Customer)
+    @email_duplicate(Customer) # must authenticate to save user
     @required_fields('name', 'email')
     def mutate(self, info, **kwargs):
         customer = Customer(**kwargs)
+        user = User.objects.get(username=str(info.context.user))
+        setattr(customer, "created_by", user)  
+        """"""
+       
         customer.save()      
         return InsertCustomer(customer=customer)
 

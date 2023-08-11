@@ -8,3 +8,6 @@ class CrmConfig(AppConfig):
     settings.NUMBERS_BOOKS = 5
     settings.LIMIT_CHARS = 200
 
+
+    def ready(self):
+        import apps.crm.signals.customer

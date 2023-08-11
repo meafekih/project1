@@ -54,13 +54,14 @@ INSTALLED_APPS = [
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'django_filters',
     "corsheaders",
+    "debug_toolbar",
 
     'apps.base',
     'apps.authentication',
     'apps.crm',
-    'silk',
 ]
 AUTH_USER_MODEL = 'authentication.ExtendUser'
+from graphene_django.debug import DjangoDebugMiddleware
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -71,8 +72,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
+     #'graphene_django.debug.DjangoDebugMiddleware',  Add this before DebugToolbarMiddleware
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 
-    'silk.middleware.SilkyMiddleware',
+
+    'myapp.custom_header_middleware.CustomHeaderMiddleware', 
+ 
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -254,5 +259,8 @@ GRAPHQL_AUTH_LOGIN_REQUIRED_ERROR_MESSAGE = "Authentication required to access t
 MEDIA_URL = '/media/'  # URL prefix for media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Absolute filesystem path to the directory that will hold user-uploaded files.
 
-
-SILKY_PYTHON_PROFILER = True
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

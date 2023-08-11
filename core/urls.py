@@ -13,9 +13,9 @@ urlpatterns = [
     path('', CustomerListView.as_view(), name='home'),
     path('upload/', CustomerCreateView.as_view(), name='upload'),
     path('download/<int:customer_id>/', download, name='download'),
+ 
 
-    path('silk/', include('silk.urls', namespace='silk')),
-
+    path("__debug__/", include("debug_toolbar.urls")),
     # if using rest api or views 
     #path('authentication/', include('apps.authentication.urls')),
     #path('libreary/', include('apps.libreary.urls')),
