@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'apps.crm',
 ]
 AUTH_USER_MODEL = 'authentication.ExtendUser'
-from graphene_django.debug import DjangoDebugMiddleware
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,9 +75,12 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 
 
-    'myapp.custom_header_middleware.CustomHeaderMiddleware', 
+    #'apps.crm.middleware.custom_header_middleware.CustomHeaderMiddleware', 
+    #'apps.crm.middleware.custom_header_middleware.GraphQLLoggingMiddleware', 
  
 ]
+
+#from apps.crm.middleware.custom_header_middleware
 
 ROOT_URLCONF = 'core.urls'
 

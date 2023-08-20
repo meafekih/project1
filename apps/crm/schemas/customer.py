@@ -8,6 +8,9 @@ from django.db import models
 from apps.base.models import base
 from django import forms
 from apps.authentication.models import ExtendUser as User
+import datetime
+import asyncio
+from datetime import datetime as dt
 
 
 class Customer(base):
@@ -52,7 +55,6 @@ class CustomerConnection(relay.Connection):
         # Perform custom logic to return the total count of MyModel objects
         return Customer.objects.count()
 
-
 class Customers(graphene.ObjectType):
     customers = relay.ConnectionField(CustomerConnection, #)
     **{field: graphene.Argument(graphene.String) for field in CustomerType._meta.fields})
@@ -61,6 +63,10 @@ class Customers(graphene.ObjectType):
     download_image = graphene.Field(CustomerType,)
     #filename=graphene.String(required=True))
 
+    def resolve_total_count(self, info):
+        print(settings.LIMIT_CHARS)
+        return CustomerConnection().total_count(info)
+    
     @filter_resolver(CustomerType)
     def resolve_download_image(self, info, name, **kwargs):
         try:
@@ -73,15 +79,20 @@ class Customers(graphene.ObjectType):
         except Customer.DoesNotExist:
             return None
 
-
     #@auth_required
     @filter_resolver(CustomerType)
     def resolve_customers(self, info, **kwargs):
-        print(settings.LIMIT_CHARS)
-        return Customer.objects.all()
+        #qs = Customer.objects.filter(name='34')  
+        qs = Customer.objects.exclude(created_at__gt=datetime.date(2023, 1, 3), name="34")
+        #SELECT ... WHERE NOT (created_at > '2005-1-3' AND name = '34')
+
+        qs =Customer.objects.exclude(pub_date__gt=datetime.date(2005, 1, 3)).exclude(name="34")
+        #SELECT ...WHERE NOT pub_date > '2005-1-3' AND NOT headline = 'Hello'
+
+
+        print(qs)
+        return qs
     
-    def resolve_total_count(self, info):
-        return CustomerConnection().total_count(info)
 
 class InsertCustomer(graphene.Mutation):
     class Arguments:
@@ -143,7 +154,13 @@ class UpdateCustomer(graphene.Mutation):
             customer.save()
         return UpdateCustomer(customer=customer)
 
+class ShowTime(graphene.ObjectType):
+    showTime = graphene.String()
 
+    async def subscribe_showTime(root, info):
+        while True:
+            yield dt.now().isoformat()
+            await asyncio.sleep(1)
 
 
 

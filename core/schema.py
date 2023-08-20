@@ -1,6 +1,6 @@
 import graphene
 from apps.authentication.schema import Query as authenticationQuery, Mutation as authenticationMutation
-from apps.crm.schema import Query as crmQuery, Mutation as crmMutation
+from apps.crm.schema import Query as crmQuery, Mutation as crmMutation, subscription as crmSubscription
 
 # import other app schemas as needed
 
@@ -16,4 +16,10 @@ class Mutation(
     graphene.ObjectType):
     pass
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+class Subscription(
+    crmSubscription,
+    graphene.ObjectType):
+    pass
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation, subscription=Subscription)

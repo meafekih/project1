@@ -14,6 +14,11 @@ def write_response(json_data, query_name):
         [error] = json_data['errors']
         print(error['message'])
 
+
+
+
+
+
 insertCustomer = '''
 mutation insertCustomer($name: String!, $email: String!, $address: String!, $phone: String!){
   insertCustomer(name:$name, email:$email, address:$address, phone:$phone){

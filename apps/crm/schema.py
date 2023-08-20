@@ -4,7 +4,8 @@ from .schemas.campaign import Campaigns
 from .schemas.contact import Contacts
 from .schemas.product import Products
 from .schemas.customer import (Customers, 
-    InsertCustomer, UpdateCustomer, DeleteCustomer)
+    InsertCustomer, UpdateCustomer, DeleteCustomer, 
+    ShowTime)
 
 class Query(Customers, Products, Contacts, Campaigns ):
     pass
@@ -15,3 +16,5 @@ class Mutation(graphene.ObjectType):
     deleteCustomer = DeleteCustomer.Field()
 
 
+class subscription(ShowTime):
+    pass

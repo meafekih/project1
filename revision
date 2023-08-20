@@ -1,0 +1,66 @@
+Field lookups
+filter(), exclude() and get().
+Entry.objects.get(id=14)
+
+Entry.objects.get(id__exact=14)
+SELECT ... WHERE id = 14;
+
+Entry.objects.get(id__exact=None)
+SELECT ... WHERE id IS NULL;
+
+Case-insensitive exact match
+Blog.objects.get(name__iexact="beatles blog")
+
+Entry.objects.get(headline__contains="Lennon")
+SELECT ... WHERE headline LIKE '%Lennon%';
+
+Case-insensitive exact match
+Entry.objects.get(headline__icontains="Lennon")
+
+
+Entry.objects.filter(id__in=[1, 3, 4])
+SELECT ... WHERE id IN (1, 3, 4);
+
+Entry.objects.filter(headline__in="abc")
+SELECT ... WHERE headline IN ('a', 'b', 'c');
+
+inner_qs = Blog.objects.filter(name__contains="Cheddar")
+entries = Entry.objects.filter(blog__in=inner_qs)
+SELECT ... WHERE blog.id IN (SELECT id FROM ... WHERE NAME LIKE '%Cheddar%')
+
+contains
+icontains
+in
+gt
+gte
+lt
+lte
+startswith
+istartswith
+endswith
+iendswith
+range
+date
+year
+iso_year
+month
+day
+week
+week_day
+iso_week_day
+quarter
+time
+hour
+minute
+second
+isnull
+regex
+iregex
+
+
+
+
+
+
+
+
