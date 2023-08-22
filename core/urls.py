@@ -3,16 +3,16 @@ from django.urls import path, include
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from .schema import schema
-from apps.crm.views.customer import CustomerCreateView, CustomerListView, download
-
+from apps.crm.views.customer import customer_list_view, download
 
 urlpatterns = [
+
+    #path('', CustomerListView.as_view(), name='customers'),
+    path('', customer_list_view, name='customers'),
     path('admin/', admin.site.urls),
     path('api/', csrf_exempt(GraphQLView.as_view(graphiql=True, schema=schema)), name='api'),
-     
-    path('', CustomerListView.as_view(), name='home'),
-    path('upload/', CustomerCreateView.as_view(), name='upload'),
-    path('download/<int:customer_id>/', download, name='download'),
+    path('crm/', include('apps.crm.urls'), name='crm'),
+    path('authentication/', include('apps.authentication.urls'), name='authentication'),
  
 
     path("__debug__/", include("debug_toolbar.urls")),

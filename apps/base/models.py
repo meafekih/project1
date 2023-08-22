@@ -8,11 +8,24 @@ class base(models.Model):
     class Meta:
         abstract = True
 
-
 class customer_change(models.Model):
     change_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='change', null=True)
     model_changed = models.CharField(max_length=20)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 """
 class all(base):

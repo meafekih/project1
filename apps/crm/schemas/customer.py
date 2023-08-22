@@ -18,10 +18,10 @@ class Customer(base):
     email = models.EmailField(null=False, blank=False)
     phone = models.CharField(max_length=20)
     address = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='user', null=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='user', null=True) # it means that the field is allowed to be left blank 
 
     document = models.FileField(upload_to='crm/')
-    description = models.CharField(max_length=255, blank=True)
+    description = models.CharField(max_length=255, blank=True)# it means that the field is allowed to have a NULL value in the database. It applies to database storage.
     
     def __str__(self):
         return self.name
@@ -36,6 +36,7 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
+
 
 class CustomerType(DjangoObjectType):
     class Meta:
