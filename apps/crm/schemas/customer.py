@@ -10,6 +10,8 @@ from django import forms
 from apps.authentication.models import ExtendUser as User
 import datetime
 import asyncio
+import base64
+from django.core.files.base import ContentFile
 from datetime import datetime as dt
 
 
@@ -31,11 +33,11 @@ class Customer(base):
         self.address = self.address.upper()
         return super().save()
 
-
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
+
 
 
 class CustomerType(DjangoObjectType):
@@ -93,26 +95,33 @@ class Customers(graphene.ObjectType):
 
         print(qs)
         return qs
+   
     
-
+""" 
 class InsertCustomer(graphene.Mutation):
     class Arguments:
         name = graphene.String()
         email= graphene.String()
         phone = graphene.String()
         address= graphene.String()
+        description = graphene.String()
+        files_names = graphene.String() 
+        files = graphene.String()  # Base64-encoded image data
     customer = graphene.Field(CustomerType)
     
     @email_duplicate(Customer) # must authenticate to save user
     @required_fields('name', 'email')
     def mutate(self, info, **kwargs):
-        customer = Customer(**kwargs)
+
+        files_names = kwargs.pop('files_names', None)
+        files = kwargs.pop('files', None)
+        customer = Customer( **kwargs)
         user = User.objects.get(username=str(info.context.user))
         setattr(customer, "created_by", user)  
-        """"""
-       
         customer.save()      
         return InsertCustomer(customer=customer)
+    
+"""
 
 class DeleteCustomer(graphene.Mutation):
     class Arguments:
@@ -165,9 +174,69 @@ class ShowTime(graphene.ObjectType):
 
 
 
-"""
-This methode uploading with updating file image to server unconseilled
 
+class InsertCustomer(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+        email= graphene.String()
+        phone = graphene.String()
+        address= graphene.String()
+        file_name = graphene.String()
+        file = graphene.String()
+
+    customer = graphene.Field(CustomerType)
+
+    @email_duplicate(Customer) # must authenticate to save user
+    @required_fields('name', 'email')
+    def mutate(self, info, **kwargs):
+        customer = Customer()
+        file_name = kwargs.pop('files_names', None)
+        file = kwargs.pop('files', None)
+        if file_name:
+            file_name= kwargs.get('file_name')
+        if file:
+            image_data = base64.b64decode(kwargs.get('file'))
+            customer.document.save(file_name , ContentFile(image_data))        
+        customer = Customer( **kwargs)
+        customer.save()
+
+
+        return InsertCustomer(customer=customer)
+
+
+
+""" 
+class InsertCustomer(graphene.Mutation):
+    class Arguments:
+        name = graphene.String()
+        email= graphene.String()
+        phone = graphene.String()
+        address= graphene.String()
+        file_name = graphene.String()
+        file = graphene.String()
+
+    customer = graphene.Field(CustomerType)
+
+    @email_duplicate(Customer) # must authenticate to save user
+    @required_fields('name', 'email')
+    def mutate(self, info, **kwargs):
+        customer = Customer()
+        file_name= ""; image_data=None
+        for field_name, field_value in kwargs.items():
+            if (field_name=='file'):
+                file = kwargs.get('file')
+                image_data = base64.b64decode(file)
+            if field_name=='file_name':
+                file_name= kwargs.get('file_name')
+            setattr(customer, field_name, field_value)
+        if image_data:
+            customer.document.save(file_name , ContentFile(image_data))
+        customer.save()
+        return InsertCustomer(customer=customer)
+
+ """
+
+"""
 import base64
 from django.core.files.base import ContentFile
 class UpdateCustomer(graphene.Mutation):

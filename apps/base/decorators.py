@@ -1,6 +1,7 @@
 from .exceptions import (EMAIL_DUPLICATE , AUTHENTICATION_REQUIRED,
  FIELD_REQUIRED, MANY_VALUES_RETURNED, VALUE_NOT_EXIST)
 from functools import wraps
+from django.http import JsonResponse
 
 
 # this filter generic filter all fieds of model
@@ -19,6 +20,18 @@ def filter_resolver(model_type):
 
 #from ..crm.schemas.customer import Customer
 from functools import wraps
+
+
+def Rest_auth_required(func):
+    def wrapper(request):         
+        user = request.user
+        if not user.is_authenticated:
+            return JsonResponse(
+            {"message": AUTHENTICATION_REQUIRED.default_message},
+            status=500
+            )         
+        return func(request)
+    return wrapper
 
 def auth_required(func):
     def wrapper(root, info, **kwargs):         

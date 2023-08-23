@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import sendingEmail
+from .views import sendingEmail, fetchingEmails
 
 urlpatterns = [
-    path('emailing/', sendingEmail, name='emailing'),
+    path('send_email/', sendingEmail, name='send-email'),
+    path('fetch_emails/', fetchingEmails, name='fetch-emails'),
 ]

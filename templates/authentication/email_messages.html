@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Messages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .message {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .message h2 {
+            margin: 0;
+        }
+        .message p {
+            margin: 5px 0;
+        }
+        .attachment {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Email Messages</h1>
+    </header>
+    <div class="container">
+        {% for message in email_messages %}
+            <div class="message">
+                <h2>{{ message.subject }}</h2>
+                <p>From: {{ message.from_address }}</p>
+                <p>To: {{ message.to }}</p>
+                <p>Date: {{ message.date }}</p>
+                <p>{{ message.body }}</p>
+                {% if message.attachments %}
+                    <p class="attachment">Attachments:</p>
+                    <ul>
+                        {% for attachment in message.attachments %}
+                            <li>{{ attachment }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -5,6 +5,8 @@ from apps.crm.schemas.customer import Customer , CustomerForm
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
+from apps.base.decorators import Rest_auth_required
+from django.http import JsonResponse
 
 """ 
 class CustomerCreateView(CreateView):
@@ -14,6 +16,7 @@ class CustomerCreateView(CreateView):
     success_url = reverse_lazy('home')
  """
 
+@Rest_auth_required
 def customer_create_view(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -28,18 +31,11 @@ def customer_create_view(request):
         created_by=created_by,document=document,description=description)
         
         customer.save()
-        return redirect('home')
-
-        form = CustomerForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-        else:
-            print(form.errors) 
-
+        return JsonResponse({"success": True, "message": 'Customer created'}, status=200)
     else:
         form = CustomerForm()
-    return render(request, 'crm/upload.html', {'form': form})
 
+    return render(request, 'crm/upload.html', {'form': form})
 
 
 """ 
@@ -59,3 +55,9 @@ def download(request, customer_id):
     response = HttpResponse(customer.document, content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="{customer.document.name}"'
     return response
+
+
+    """ 
+i canot create form and modify field created_by
+
+        """

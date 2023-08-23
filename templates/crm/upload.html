@@ -21,7 +21,10 @@
           <a class="nav-link" href="{% url 'upload' %}">Upload File customer</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'emailing' %}">Emailing</a>
+          <a class="nav-link" href="{% url 'send-email' %}">Send Email</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'fetch-emails' %}">Fetch Emails</a>
         </li>
   
       </ul>
@@ -58,6 +61,11 @@
     <div class="mb-3">
       <label for="id_description" class="form-label">Description</label>
       <input type="text" class="form-control" id="id_description" name="description">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_created_by" class="form-label">created_by</label>
+      <input type="text" class="form-control" id="id_created_by" name="created_by">
     </div>
     
     <div class="mb-3">
